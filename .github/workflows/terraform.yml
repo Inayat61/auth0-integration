@@ -49,4 +49,5 @@ jobs:
         TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }} 
       run: |
         cd terraform
+        terraform init
         terraform apply -auto-approve -input=false
