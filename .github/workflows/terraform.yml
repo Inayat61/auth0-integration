@@ -35,12 +35,12 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y awscli
     
-    - name: Build React App & Deploy to S3
-      run: |
-        cd frontend
-        yarn install
-        yarn run build
-        aws s3 sync build/ s3://"auth0-integration-helloworld-react-app-bucket" --delete --acl public-read
+    # - name: Build React App & Deploy to S3
+    #   run: |
+    #     cd frontend
+    #     yarn install
+    #     yarn run build
+    #     aws s3 sync build/ s3://"auth0-integration-helloworld-react-app-bucket" --delete --acl public-read
 
     - name: Build Auth0 Actions
       run: |
