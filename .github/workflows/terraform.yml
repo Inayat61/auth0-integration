@@ -30,6 +30,8 @@ jobs:
 # Try to download the state file, but don't fail the job if it's missing (for the first run)
     - name: Download Terraform State (if available)
       id: download_state
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         if [ $(gh api -X GET repos/${{ github.repository }}/actions/artifacts --jq '.artifacts | length') -gt 0 ]; then
           gh run download-artifact terraform-state --dir terraform/
