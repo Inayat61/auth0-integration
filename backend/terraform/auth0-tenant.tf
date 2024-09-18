@@ -1,3 +1,7 @@
+locals {
+  cloudfront_url_to_s3_react_app = "https://d1992ly3dsmie5.cloudfront.net"
+}
+
 resource "auth0_tenant" "_" {
   friendly_name = "Helloworld App"
   enabled_locales = ["en"]
@@ -32,12 +36,12 @@ resource "auth0_connection" "_" {
 resource "auth0_client" "_" {
   name                                = "signin-ui-client"
   app_type                            = "spa"
-  allowed_origins                     = ["https://${var.auth0_domain}", "http://localhost:3000"]
-  allowed_logout_urls                 = ["https://${var.auth0_domain}/v2/logout", "http://localhost:3000"]
+  allowed_origins                     = ["https://${var.auth0_domain}", local.cloudfront_url_to_s3_react_app]
+  allowed_logout_urls                 = ["https://${var.auth0_domain}/v2/logout", local.cloudfront_url_to_s3_react_app]
   grant_types = [
     "authorization_code",
   ]
-  callbacks = ["https://${var.auth0_domain}", "http://localhost:3000"]
+  callbacks = ["https://${var.auth0_domain}", local.cloudfront_url_to_s3_react_app]
 
   jwt_configuration {
     lifetime_in_seconds = 300
