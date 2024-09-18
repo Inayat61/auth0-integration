@@ -11,7 +11,6 @@ import {
   Nav,
   NavItem,
   NavLink,
-  Button,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -25,7 +24,6 @@ const NavBar = () => {
   const {
     user,
     isAuthenticated,
-    loginWithRedirect,
     logout,
   } = useAuth0();
   const toggle = () => setIsOpen(!isOpen);
