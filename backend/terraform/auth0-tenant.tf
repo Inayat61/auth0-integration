@@ -1,5 +1,6 @@
 locals {
-  cloudfront_url_to_s3_react_app = "https://d1992ly3dsmie5.cloudfront.net"
+  cloudfront_url_to_s3_react_app = "https://d1992ly3dsmie5.cloudfront.net",
+  localhost_frontend_app_url = "http://localhost:3000"
 }
 
 resource "auth0_tenant" "_" {
@@ -36,12 +37,12 @@ resource "auth0_connection" "_" {
 resource "auth0_client" "_" {
   name                                = "signin-ui-client"
   app_type                            = "spa"
-  allowed_origins                     = ["https://${var.auth0_domain}", local.cloudfront_url_to_s3_react_app]
-  allowed_logout_urls                 = ["https://${var.auth0_domain}/v2/logout", local.cloudfront_url_to_s3_react_app]
+  allowed_origins                     = ["https://${var.auth0_domain}", local.cloudfront_url_to_s3_react_app, localhost_frontend_app_url]
+  allowed_logout_urls                 = ["https://${var.auth0_domain}/v2/logout", local.cloudfront_url_to_s3_react_app, localhost_frontend_app_url]
   grant_types = [
     "authorization_code",
   ]
-  callbacks = ["https://${var.auth0_domain}", local.cloudfront_url_to_s3_react_app]
+  callbacks = ["https://${var.auth0_domain}", local.cloudfront_url_to_s3_react_app, localhost_frontend_app_url]
 
   jwt_configuration {
     lifetime_in_seconds = 300
