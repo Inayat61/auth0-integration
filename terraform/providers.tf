@@ -5,6 +5,11 @@ terraform {
       version = "1.6.1"
     }
   }
+  backend "s3" {
+    bucket         = "auth0-integration-helloworld"
+    key            = "terraform/state.tfstate"
+    region         = "us-east-1"
+  }
 }
 
 # terraform-client
