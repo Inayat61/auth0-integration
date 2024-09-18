@@ -51,3 +51,21 @@ resource "auth0_connection_client" "_" {
   connection_id = auth0_connection._.id
   client_id     = auth0_client._.id
 }
+
+resource "auth0_client" "forms_vault" {
+  name                                = "auth0-forms-vault-client"
+  app_type                            = "non_interactive"
+  grant_types = [
+    "client_credentials",
+  ]
+}
+
+data "auth0_resource_server" "_" {
+  identifier = "https://${var.auth0_domain}/api/v2/"
+}
+
+resource "auth0_client_grant" "forms_vault_client_grant" {
+  client_id = auth0_client.forms_vault.id
+  audience  = data.auth0_resource_server._.identifier
+  scopes    = ["read:users", "update:users", "create:users", "read:users_app_metadata", "update:users_app_metadata", "create:users_app_metadata"]
+}
