@@ -69,3 +69,40 @@ resource "auth0_client_grant" "forms_vault_client_grant" {
   audience  = data.auth0_resource_server._.identifier
   scopes    = ["read:users", "update:users", "create:users", "read:users_app_metadata", "update:users_app_metadata", "create:users_app_metadata"]
 }
+
+
+resource "auth0_action" "get_favourite_sport" {
+  name   = "get-favourite-sport"
+  code        = file("../auth0-actions/dist/get-favourite-sport.js")
+  deploy = true
+  
+  supported_triggers {
+    id      = "post-login"
+    version = "v3"
+  }
+}
+
+resource "auth0_action" "add_custom_claims" {
+  name   = "add-custom-claims"
+  code        = file("../auth0-actions/dist/add-custom-claims.js")
+  deploy = true
+  
+  supported_triggers {
+    id      = "post-login"
+    version = "v3"
+  }
+}
+
+resource "auth0_trigger_actions" "_" {
+  trigger = "post-login"
+
+  actions {
+    id           = auth0_action.get_favourite_sport.id
+    display_name = auth0_action.get_favourite_sport.name
+  }
+
+  actions {
+    id           = auth0_action.add_custom_claims.id
+    display_name = auth0_action.add_custom_claims.name
+  }
+}
