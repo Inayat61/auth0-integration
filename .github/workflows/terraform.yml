@@ -36,6 +36,9 @@ jobs:
         echo "AWS credentials configured"
 
     - name: Terraform Init
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_SECRET }}
       run: |
         cd terraform
         terraform init -reconfigure
