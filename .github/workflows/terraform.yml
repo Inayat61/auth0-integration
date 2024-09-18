@@ -27,16 +27,24 @@ jobs:
       with:
         terraform_version: "1.1.7"
 
+    # Download the previously stored state file, if it exists
+    - name: Download Terraform State
+      id: download_state
+      uses: actions/download-artifact@v3
+      with:
+        name: terraform-state
+        path: terraform/
+
     - name: Terraform Init
       run: |
         cd terraform
-        terraform init
+        terraform init -reconfigure
 
     - name: Terraform Plan
       env:
         TF_VAR_auth0_domain: ${{ secrets.AUTH0_DOMAIN }} 
         TF_VAR_auth0_client_id: ${{ secrets.AUTH0_CLIENT_ID }} 
-        TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }} 
+        TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }}
       run: |
         cd terraform
         terraform plan -input=false
@@ -46,8 +54,14 @@ jobs:
       env:
         TF_VAR_auth0_domain: ${{ secrets.AUTH0_DOMAIN }} 
         TF_VAR_auth0_client_id: ${{ secrets.AUTH0_CLIENT_ID }} 
-        TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }} 
+        TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }}
       run: |
         cd terraform
-        terraform init
         terraform apply -auto-approve -input=false
+
+    # Upload the state file as an artifact for future use
+    - name: Upload Terraform State
+      uses: actions/upload-artifact@v3
+      with:
+        name: terraform-state
+        path: terraform/terraform.tfstate
