@@ -22,17 +22,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-      
-    - name: Build Auth0 Actions
-      run: |
-        cd auth0-actions
-        npm install
-        npm run build
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: "1.1.7"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -41,9 +30,32 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET }}
         aws-region: us-east-1
 
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y awscli
+
+    - name: Build React App & Deploy to S3
+      run: |
+        cd frontend
+        yarn install
+        yarn run build
+        aws s3 sync build/ s3://"auth0-integration-helloworld-react-app-bucket" --delete --acl public-read
+
+    - name: Build Auth0 Actions
+      run: |
+        cd backend/auth0-actions
+        npm install
+        npm run build
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.1.7"
+
     - name: Terraform Init
       run: |
-        cd terraform
+        cd backend/terraform
         terraform init -reconfigure
 
     - name: Terraform Plan
@@ -53,7 +65,7 @@ jobs:
         TF_VAR_auth0_client_id: ${{ secrets.AUTH0_CLIENT_ID }} 
         TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }}
       run: |
-        cd terraform
+        cd backend/terraform
         terraform plan -out=tfplan
 
     - name: Terraform Apply
@@ -63,5 +75,5 @@ jobs:
         TF_VAR_auth0_client_id: ${{ secrets.AUTH0_CLIENT_ID }} 
         TF_VAR_auth0_client_secret: ${{ secrets.AUTH0_CLIENT_SECRET }}
       run: |
-        cd terraform
+        cd backend/terraform
         terraform apply -auto-approve tfplan
