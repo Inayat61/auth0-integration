@@ -77,7 +77,11 @@ This project uses **Auth0** to handle user login and authentication. After loggi
    ```bash
    terraform init
    ```
-5. Apply the Terraform configurations:
+5. Terraform plan:
+   ```bash
+   terraform plan
+   ```
+6. Apply the Terraform configurations:
    ```bash
    terraform apply
    ```
@@ -98,13 +102,16 @@ To run this project locally:
    ```
 3. Install dependencies:
    ```bash
-   npm install
+   yarn install
    ```
 4. Set up your environment variables for the frontend to communicate with **Auth0** and use **CloudFront**.
-5. Build and start the application:
+5. Start the application:
    ```bash
-   npm run build
-   npm start
+   yarn run dev
+   ```
+6. Build the application for deployment:
+   ```bash
+   yarn run build
    ```
 
 ## Usage
