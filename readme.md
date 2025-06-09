@@ -21,6 +21,23 @@ You can visit the live version of the application at the link above.
 
 The **HelloWorld** application is a full-stack web application deployed using **Terraform**. The frontend is built with **React** and hosted on **Amazon S3**, while **Amazon CloudFront** is used for content delivery. The backend is integrated with **Auth0** for authentication services, and Terraform is used to provision the necessary cloud infrastructure.
 
+sequenceDiagram
+    participant Browser
+    participant CloudFront
+    participant S3
+    participant Auth0
+
+    Browser->>CloudFront: Request application
+    CloudFront->>S3: Retrieve static assets
+    S3-->>CloudFront: Returns static assets
+    CloudFront-->>Browser: Returns application
+    Browser->>Auth0: Authentication request
+    Auth0->>Browser: Redirect to Universal Login
+    Browser->>Auth0: User credentials
+    Auth0->>Browser: Authentication token
+    Browser->>CloudFront: Access protected pages with token
+
+
 ## Technology Stack
 
 - **Frontend**: React
@@ -113,7 +130,6 @@ To run this project locally:
    ```bash
    yarn run build
    ```
-
 ## Usage
 
 Once deployed, the application can be accessed via the **CloudFront URL**. User login is handled by **Auth0** and redirects them to the app's protected pages post-login.
